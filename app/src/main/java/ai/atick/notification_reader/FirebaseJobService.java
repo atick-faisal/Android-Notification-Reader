@@ -11,7 +11,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import static ai.atick.notification_reader.Key.TAG;
 
@@ -19,13 +22,13 @@ public class FirebaseJobService extends JobService {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference = database.getReference();
-
-    ArrayList<String> dataList = new ArrayList<>();
+    AppDatabase appDatabase;
+    ArrayList<String> uploadList = new ArrayList<>();
 
     @Override
     public boolean onStartJob(JobParameters params) {
         Log.d(TAG, "Uploading to Firebase");
-        doInBackground(params);
+        doInBackground();
         return false;
     }
 
@@ -35,15 +38,18 @@ public class FirebaseJobService extends JobService {
         return true;
     }
 
-    private void doInBackground(final JobParameters parameters) {
-        AppDatabase appDatabase = new AppDatabase(getApplicationContext());
-        dataList = appDatabase.getListString("Dictionary");
-        reference.child("notification_list").setValue(dataList, new DatabaseReference.CompletionListener() {
+    private void doInBackground() {
+        appDatabase = new AppDatabase(getApplicationContext());
+        uploadList.clear();
+        uploadList = appDatabase.getListString("Notification_List");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy|MM|dd-HH:mm:ss", Locale.getDefault());
+        String currentDateAndTime = sdf.format(new Date());
+        reference.child(currentDateAndTime).setValue(uploadList, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                Key.jobCompleted = true;
                 Log.d(TAG, "Firebase upload finished");
-                NotificationService notificationService = new NotificationService();
-                notificationService.myList.clear();
+                uploadList.clear();
             }
         });
     }

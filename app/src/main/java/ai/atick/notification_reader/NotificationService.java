@@ -1,22 +1,21 @@
 package ai.atick.notification_reader;
 
+import android.os.Bundle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+
+import static ai.atick.notification_reader.Key.TAG;
 
 public class NotificationService extends NotificationListenerService {
 
-    public ArrayList<String> myList = new ArrayList<>();
+    public ArrayList<String> notificationList = new ArrayList<>();
     AppDatabase appDatabase;
     String packageName = "no-name";
-    String appTitle = "Untitled";
+    String title = "Untitled";
     String text = "empty";
-    long postTime = 0;
 
     @Override
     public void onCreate() {
@@ -26,14 +25,24 @@ public class NotificationService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        if (Key.jobCompleted) {
+            notificationList.clear();
+            appDatabase.putListString("Notification_List", notificationList);
+        }
         packageName = sbn.getPackageName();
-        postTime = sbn.getPostTime();
-//        Bundle extras = sbn.getNotification().extras;
-//        appTitle = extras.getString("android.title");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd-HH:mm:ss", Locale.getDefault());
-        String currentDateAndTime = sdf.format(new Date());
-        Log.d(Key.TAG, currentDateAndTime);
-        myList.add(currentDateAndTime);
-        appDatabase.putListString("Dictionary", myList);
+        if (packageName.equals("com.facebook.orca")) {
+            Bundle extras = sbn.getNotification().extras;
+            if (extras != null) {
+                title = extras.getString("android.title");
+                if (title != null && !title.equals("Chat heads active")) {
+                    text = extras.getString("android.text");
+                    String notification = title + " : " + text;
+                    notificationList.add(notification);
+                    Log.d(TAG, notification);
+                }
+            }
+        }
+        appDatabase.putListString("Notification_List", notificationList);
+        Key.jobCompleted = false;
     }
 }
