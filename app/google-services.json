@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "155962049385",
+    "firebase_url": "https://notification-reader-e285b.firebaseio.com",
+    "project_id": "notification-reader-e285b",
+    "storage_bucket": "notification-reader-e285b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155962049385:android:08b1beda36651ff04933f8",
+        "android_client_info": {
+          "package_name": "ai.atick.notification_reader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155962049385-jacue0kk6qf897fat5i29gfsml3b94kn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ai.atick.notification_reader",
+            "certificate_hash": "267e0aa491dc5d778757fd7f60ebbd008c6c3b31"
+          }
+        },
+        {
+          "client_id": "155962049385-278hmutd0be3ds156cvo9b2cg764hph0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA202Rwxn3F0-pRE6raV9GOOlS7xJJx768"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "155962049385-278hmutd0be3ds156cvo9b2cg764hph0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
