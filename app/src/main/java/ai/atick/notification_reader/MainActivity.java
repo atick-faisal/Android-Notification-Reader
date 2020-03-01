@@ -3,17 +3,27 @@ package ai.atick.notification_reader;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    public boolean permissionGranted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        permissionGranted = NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext()).contains(getApplicationContext().getPackageName());
+        if (!permissionGranted) {
+            askForNotificationAccessPermission();
+            Toast.makeText(getApplicationContext(), "Turn on Notification Access for Notification Reader", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -36,5 +46,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d(Key.TAG, "Job scheduling failed");
         }
+    }
+
+    private void askForNotificationAccessPermission() {
+        startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 }
