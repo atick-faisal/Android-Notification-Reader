@@ -19,12 +19,13 @@ import java.util.Locale;
 import static ai.atick.notification_reader.Key.TAG;
 
 public class FirebaseJobService extends JobService {
-
+    ////////////////////////////////////////////////////////////////
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference = database.getReference();
     AppDatabase appDatabase;
     ArrayList<String> uploadList = new ArrayList<>();
 
+    ////////////////////////////////////////////////////////////////
     @Override
     public boolean onStartJob(JobParameters params) {
         Log.d(TAG, "Uploading to Firebase");
@@ -32,12 +33,14 @@ public class FirebaseJobService extends JobService {
         return false;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean onStopJob(JobParameters params) {
         Log.d(TAG, "Upload cancelled");
         return true;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     private void doInBackground() {
         appDatabase = new AppDatabase(getApplicationContext());
         uploadList.clear();

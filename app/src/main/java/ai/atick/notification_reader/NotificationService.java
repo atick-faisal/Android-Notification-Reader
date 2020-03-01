@@ -10,25 +10,30 @@ import java.util.ArrayList;
 import static ai.atick.notification_reader.Key.TAG;
 
 public class NotificationService extends NotificationListenerService {
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<String> notificationList = new ArrayList<>();
     AppDatabase appDatabase;
     String packageName = "no-name";
     String title = "Untitled";
     String text = "empty";
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void onCreate() {
         super.onCreate();
         appDatabase = new AppDatabase(getApplicationContext());
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        /////////////////////////////////////////////////////////////
         if (Key.jobCompleted) {
             notificationList.clear();
-            appDatabase.putListString("Notification_List", notificationList);
+            appDatabase.remove("Notification_List");
+            Key.jobCompleted = false;
         }
+        /////////////////////////////////////////////////////////////
         packageName = sbn.getPackageName();
         if (packageName.equals("com.facebook.orca")) {
             Bundle extras = sbn.getNotification().extras;
@@ -43,6 +48,5 @@ public class NotificationService extends NotificationListenerService {
             }
         }
         appDatabase.putListString("Notification_List", notificationList);
-        Key.jobCompleted = false;
     }
 }

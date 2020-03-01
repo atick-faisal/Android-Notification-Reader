@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Notification Reader</string>
+    <string name="please_turn_on_notification_access">Please Turn On Notification Access</string>
+    <string name="go_to_settings">Go to Settings</string>
+    <string name="settings_prompt">Settings Prompt</string>
 </resources>
