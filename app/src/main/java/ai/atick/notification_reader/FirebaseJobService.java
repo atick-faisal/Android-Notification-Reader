@@ -14,17 +14,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Calendar;
 import java.util.Date;
 
-public class NotificationJobService extends JobService {
+import static ai.atick.notification_reader.Key.TAG;
 
-    private static final String TAG = "NotificationJobService";
+public class FirebaseJobService extends JobService {
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference reference = database.getReference();
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        Log.d(TAG, "Job Started");
+        Log.d(TAG, "Uploading to Firebase");
         doInBackground(params);
         return false;
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters params) {
+        Log.d(TAG, "Upload cancelled");
+        return true;
     }
 
     private void doInBackground(final JobParameters parameters) {
@@ -32,15 +39,9 @@ public class NotificationJobService extends JobService {
         reference.child("timestamp").setValue(date.getTime(), new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                Log.d(TAG, "Job Finished");
+                Log.d(TAG, "Firebase upload finished");
                 jobFinished(parameters, false);
             }
         });
-    }
-
-    @Override
-    public boolean onStopJob(JobParameters params) {
-        Log.d(TAG, "Job cancelled before completion");
-        return true;
     }
 }

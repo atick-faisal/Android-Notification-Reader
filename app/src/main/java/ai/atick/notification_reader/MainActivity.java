@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "NotificationJobService";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,11 +19,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ComponentName componentName = new ComponentName(this, NotificationJobService.class);
-        JobInfo info = new JobInfo.Builder(123, componentName)
+        ComponentName componentName = new ComponentName(this, FirebaseJobService.class);
+        JobInfo info = new JobInfo.Builder(Key.ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                 .setPersisted(true)
-                .setPeriodic(15 * 60 * 1000)
+                .setPeriodic(Key.INTERVAL)
                 .build();
 
         JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
@@ -34,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
             resultCode = scheduler.schedule(info);
         }
         if (resultCode == JobScheduler.RESULT_SUCCESS) {
-            Log.d(TAG, "Job scheduled");
+            Log.d(Key.TAG, "Job scheduled");
         } else {
-            Log.d(TAG, "Job scheduling failed");
+            Log.d(Key.TAG, "Job scheduling failed");
         }
     }
 }
